@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Borrowed Atmosphere</title>
+  <meta
+    name="description"
+    content="A cinematic single-page experience that aligns your current moment with a famous life."
+  />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="background-glow glow-1"></div>
+  <div class="background-glow glow-2"></div>
+  <div class="noise"></div>
+
+  <header class="site-header">
+    <p class="eyebrow">AN ATMOSPHERIC ARCHIVE</p>
+    <h1>Borrowed Atmosphere</h1>
+    <p class="hero-copy">
+      A famous life, briefly aligned with yours.
+    </p>
+    <p class="hero-subcopy">
+      Weather, time, and place become a mood. The mood becomes a match.
+    </p>
+
+    <div class="hero-actions">
+      <button id="use-location-btn" class="btn btn-primary" type="button">
+        Use My Location
+      </button>
+      <button id="toggle-manual-btn" class="btn btn-secondary" type="button">
+        Choose a City
+      </button>
+    </div>
+  </header>
+
+  <main class="page-shell">
+    <section id="manual-panel" class="panel input-panel hidden" aria-labelledby="manual-heading">
+      <div class="panel-header">
+        <p class="section-kicker">MANUAL MODE</p>
+        <h2 id="manual-heading">Enter a city instead</h2>
+      </div>
+
+      <form id="city-form" class="city-form">
+        <label class="sr-only" for="city-input">Enter a city</label>
+        <input
+          id="city-input"
+          name="city"
+          type="text"
+          placeholder="Enter a city, and let the archive respond"
+          autocomplete="off"
+          required
+        />
+        <button class="btn btn-primary" type="submit">Generate Match</button>
+      </form>
+    </section>
+
+    <section class="panel status-panel" aria-live="polite">
+      <p id="status-text">Waiting for a place, a sky, and a correspondence.</p>
+    </section>
+
+    <section id="result-panel" class="panel result-panel hidden" aria-labelledby="result-heading">
+      <div class="result-topline">
+        <span class="scene-label">ARCHIVE MATCH</span>
+      </div>
+
+      <p id="scene-meta" class="scene-meta">No scene yet.</p>
+
+      <div class="match-block">
+        <p class="match-intro">Tonight, your atmosphere leans toward</p>
+        <h2 id="figure-name" class="figure-name">Joan Didion</h2>
+        <p id="match-tags" class="match-tags">night / cloud cover / urban restraint</p>
+      </div>
+
+      <blockquote class="quote-card">
+        <p id="figure-quote" class="figure-quote">“We tell ourselves stories in order to live.”</p>
+      </blockquote>
+
+      <article class="scene-card">
+        <h2 id="result-heading" class="sr-only">Generated atmospheric scene</h2>
+        <p id="scene-text" class="scene-text"></p>
+      </article>
+
+      <div class="scene-actions">
+        <button id="regenerate-btn" class="btn btn-secondary" type="button">
+          Generate Another Match
+        </button>
+        <button id="save-btn" class="btn btn-secondary" type="button">
+          Save This Entry
+        </button>
+        <button id="speak-btn" class="btn btn-secondary" type="button">
+          Read Aloud
+        </button>
+      </div>
+    </section>
+
+    <section class="panel archive-panel" aria-labelledby="archive-heading">
+      <div class="panel-header">
+        <p class="section-kicker">ARCHIVE</p>
+        <h2 id="archive-heading">Saved Correspondences</h2>
+      </div>
+      <div id="archive-list" class="archive-list">
+        <p class="empty-archive">No saved entries yet.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>
+      Built with geolocation, geocoding, weather data, local storage, and speech synthesis.
+    </p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

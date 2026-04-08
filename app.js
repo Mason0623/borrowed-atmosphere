@@ -84,9 +84,17 @@ async function handleUseMyLocation() {
     const position = await getCurrentPosition();
     const { latitude, longitude } = position.coords;
 
+    let detectedCity = null;
+    try {
+      detectedCity = await reverseGeocode(latitude, longitude);
+    } catch (error) {
+      console.error("reverseGeocode error:", error);
+    }
+
     await buildEntryFromCoordinates({
       latitude,
       longitude,
+      cityName: detectedCity,
       sourceLabel: "Your current location"
     });
   } catch (error) {
@@ -208,7 +216,9 @@ async function buildEntryFromCoordinates({
     console.log("Weather API response:", weatherData);
 
     const weather = extractWeatherData(weatherData);
-    const displayCity = cityName || inferCityName(weatherData) || "Unknown Place";
+    const displayCity = shortenLocationName(
+      cityName || inferCityName(weatherData) || "Unknown Place"
+    );
     const now = new Date();
 
     const context = {
@@ -371,6 +381,22 @@ async function geocodeCity(city) {
   };
 }
 
+async function reverseGeocode(latitude, longitude) {
+  const url = `${API_BASE}/geocode?address=${encodeURIComponent(`${latitude},${longitude}`)}`;
+  const response = await fetch(url);
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(`Reverse geocoding failed with status ${response.status}: ${errorText}`);
+  }
+
+  const data = await response.json();
+  console.log("Reverse geocode response:", data);
+
+  const firstResult = data?.results?.[0];
+  return firstResult?.formatted_address || null;
+}
+
 async function getWeather(latitude, longitude) {
   const url = `${API_BASE}/weather?latitude=${latitude}&longitude=${longitude}`;
   const response = await fetch(url);
@@ -477,6 +503,15 @@ function extractWeatherData(data) {
 
 function inferCityName(data) {
   return data?.location?.city || data?.city || data?.resolvedAddress || null;
+}
+
+function shortenLocationName(location) {
+  if (!location) return "Unknown Place";
+  const parts = location.split(",").map(part => part.trim()).filter(Boolean);
+  if (parts.length >= 2) {
+    return `${parts[0]}, ${parts[1]}`;
+  }
+  return location;
 }
 
 function getPartOfDay(hour) {
